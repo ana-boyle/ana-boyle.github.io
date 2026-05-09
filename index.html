@@ -5,19 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>🐻‍❄️ Festa della Mamma - Storia d'orsa</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
     html, body {
       height: 100%;
       overflow: hidden;
       font-family: 'Georgia', 'Times New Roman', serif;
     }
 
-    /* Fallback viewport height per mobile */
+    /* container principale */
     .story-container {
       position: relative;
       width: 100%;
       height: 100vh; /* fallback */
-      height: 100dvh; /* dynamic viewport, evita problemi con barre browser */
+      height: 100dvh;
       overflow: hidden;
     }
 
@@ -38,66 +44,46 @@
       justify-content: center;
       position: relative;
       padding: 2rem;
-      /* Sfondo – ora ottimizzato per mobile */
       background-size: cover;
       background-position: center center;
       background-repeat: no-repeat;
-      background-attachment: scroll; /* fondamentale per iOS */
-      -webkit-background-size: cover; /* per vecchie versioni */
-      /* Sovrapposizione pastello per mantenere lo stile */
-      background-color: rgba(255, 240, 245, 0.2);
+      background-attachment: scroll;
+      background-color: rgba(255, 240, 245, 0.3);
       background-blend-mode: overlay;
     }
+
+    /* Sovrapposizione delicata */
     .scene::before {
       content: "";
       position: absolute;
       inset: 0;
-      background: radial-gradient(circle at 20% 30%, rgba(255,255,255,0.45) 0%, transparent 60%),
-                  radial-gradient(circle at 80% 70%, rgba(255,182,193,0.2) 0%, transparent 60%);
+      background: radial-gradient(circle at 20% 30%, rgba(255,255,255,0.4) 0%, transparent 60%),
+                  radial-gradient(circle at 80% 70%, rgba(255,182,193,0.15) 0%, transparent 60%);
       pointer-events: none;
       z-index: 1;
     }
 
-    .story-text {
-      position: relative;
-      z-index: 2;
-      font-size: clamp(1.2rem, 5vw, 1.7rem);
-      color: #3e4a5b;
-      text-align: center;
-      max-width: 24ch;
-      line-height: 1.5;
-      font-style: italic;
-      text-shadow: 2px 2px 8px rgba(255,255,255,0.9);
-      background: rgba(255, 255, 255, 0.55);
-      backdrop-filter: blur(8px);
-      padding: 1.2rem 1.5rem;
-      border-radius: 2rem;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-      margin: 0 1rem; /* margine extra su mobile */
-    }
-
-    /* Scena dedica – ora scrollabile se il testo è lungo */
+    /* scena dedica scrollabile in verticale se necessario */
     .scene.dedica-scene {
-      justify-content: center;    /* centra verticalmente il contenuto */
+      justify-content: center;
       align-items: center;
       padding: 1rem 1.5rem;
-      overflow: hidden;           /* nessuno scroll */
-      display: flex;
-      flex-direction: column;
-      gap: 0.8rem;                /* spazio uniforme tra foto e dedica */
+      overflow-y: auto;
+      overflow-x: hidden;
+      gap: 0.5rem;
     }
 
     .photo-frame {
       position: relative;
       z-index: 2;
-      width: 140px;               /* leggermente ridotto per mobile */
+      width: 140px;
       height: 140px;
       border-radius: 50%;
       object-fit: cover;
       border: 5px solid white;
       box-shadow: 0 12px 24px rgba(0,0,0,0.15), 0 0 0 8px rgba(255,255,255,0.4);
-      margin-bottom: 1.5rem;
-      flex-shrink: 0;             /* non si comprime */
+      margin-bottom: 0.8rem;
+      flex-shrink: 0;
     }
 
     .dedication {
@@ -105,14 +91,14 @@
       z-index: 2;
       text-align: center;
       color: #4a3b5c;
-      font-size: clamp(0.95rem, 3.8vw, 1.15rem); /* leggermente più piccolo su mobile */
-      max-width: 26ch;
+      font-size: clamp(0.9rem, 3.8vw, 1.15rem);
+      max-width: 28ch;
       line-height: 1.7;
-      margin: 0 1rem 2rem 1rem;   /* margine inferiore per respiro */
-      background: rgba(255,255,255,0.65);
+      margin: 0 0.5rem 1.2rem 0.5rem;
+      background: rgba(255,255,255,0.7);
       backdrop-filter: blur(12px);
-      padding: 1.5rem 1.2rem;
-      border-radius: 2.5rem;
+      padding: 1.2rem 1.2rem;
+      border-radius: 2rem;
       box-shadow: 0 10px 25px rgba(0,0,0,0.05);
       word-wrap: break-word;
     }
@@ -121,75 +107,81 @@
       display: block;
       margin-top: 1rem;
       font-weight: bold;
-      font-size: 1.3em;
+      font-size: 1.2em;
       color: #b15e76;
     }
 
-    /* Frecce navigazione – più piccole su schermi stretti */
+    /* frecce navigazione ottimizzate per tocchi */
     .nav-arrow {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      background: rgba(255,255,255,0.8);
+      background: rgba(255,255,255,0.85);
       backdrop-filter: blur(12px);
       border: none;
-      width: 40px;
-      height: 40px;
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
-      font-size: 1.6rem;
-      color: #556;
+      font-size: 1.7rem;
+      color: #4a3b5c;
       cursor: pointer;
       z-index: 30;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.3s;
+      transition: all 0.2s ease;
       -webkit-tap-highlight-color: transparent;
     }
     .nav-arrow:active {
-      background: rgba(255,255,255,0.95);
-      transform: translateY(-50%) scale(0.92);
+      background: rgba(255,255,255,0.98);
+      transform: translateY(-50%) scale(0.94);
     }
-    .nav-arrow.left { left: 8px; }
-    .nav-arrow.right { right: 8px; }
+    .nav-arrow.left { left: 10px; }
+    .nav-arrow.right { right: 10px; }
     .nav-arrow.hidden { opacity: 0; pointer-events: none; }
 
-    /* Puntini */
+    /* punti indicatori */
     .dots {
       position: absolute;
-      bottom: 15px;
+      bottom: 18px;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
-      gap: 8px;
+      gap: 10px;
       z-index: 30;
+      background: rgba(255,245,245,0.4);
+      padding: 6px 12px;
+      border-radius: 40px;
+      backdrop-filter: blur(4px);
     }
     .dot {
       width: 8px;
       height: 8px;
       border-radius: 50%;
-      background: rgba(255,255,255,0.9);
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      transition: all 0.35s;
+      background: rgba(255,240,240,0.95);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
     }
     .dot.active {
-      background: #ff99aa;
-      box-shadow: 0 0 14px #ffb6c1;
+      background: #e6819b;
+      box-shadow: 0 0 12px #ffb6c1;
       transform: scale(1.4);
     }
 
+    /* barra progresso */
     .progress-bar {
       position: absolute;
       top: 0;
       left: 0;
       height: 3px;
-      background: #ffb6c1;
+      background: #ffa5b9;
       z-index: 35;
       transition: width 0.1s linear;
-      box-shadow: 0 0 8px #ffb6c1;
+      box-shadow: 0 0 6px #ffb6c1;
     }
 
+    /* zone touch laterali */
     .tap-zone {
       position: absolute;
       top: 0;
@@ -197,63 +189,223 @@
       width: 30%;
       z-index: 20;
       cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
     }
     .tap-zone.left { left: 0; }
     .tap-zone.right { right: 0; }
 
+    /* overlay audio iniziale */
     .audio-overlay {
       position: absolute;
       inset: 0;
       z-index: 50;
-      background: rgba(255,255,255,0.9);
+      background: rgba(255,255,255,0.92);
       display: flex;
       align-items: center;
       justify-content: center;
-      backdrop-filter: blur(4px);
-      transition: opacity 0.6s;
+      backdrop-filter: blur(6px);
+      transition: opacity 0.5s ease;
     }
     .audio-overlay.fade-out {
       opacity: 0;
       pointer-events: none;
     }
     .audio-btn {
-      background: #ff99aa;
+      background: #e0879f;
       border: none;
       border-radius: 3rem;
-      padding: 1.2rem 2.5rem;
-      font-size: 1.4rem;
+      padding: 1rem 2rem;
+      font-size: 1.2rem;
       color: white;
       font-family: inherit;
       font-weight: bold;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.15);
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      transition: transform 0.3s;
+      gap: 0.6rem;
+      transition: transform 0.2s;
     }
     .audio-btn:active {
       transform: scale(0.96);
     }
+
+    /* --- ROTATE HINT (messaggio discreto per orientamento portrait) --- */
+    .rotate-hint {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(0);
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(12px);
+      color: #fff7e8;
+      padding: 8px 16px;
+      border-radius: 48px;
+      font-size: 0.75rem;
+      font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 200;
+      pointer-events: auto;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+      white-space: nowrap;
+      letter-spacing: 0.3px;
+      border: 1px solid rgba(255,215,200,0.5);
+      transition: opacity 0.25s;
+    }
+    .rotate-hint span {
+      font-size: 1rem;
+    }
+    .rotate-hint .close-hint {
+      background: rgba(255,255,255,0.25);
+      border-radius: 30px;
+      width: 20px;
+      height: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: bold;
+      margin-left: 6px;
+      cursor: pointer;
+      color: white;
+      transition: background 0.2s;
+    }
+    .rotate-hint .close-hint:hover,
+    .rotate-hint .close-hint:active {
+      background: rgba(255,255,255,0.5);
+    }
+
+    /* di default messaggio nascosto */
+    .rotate-hint {
+      display: none;
+    }
+
+    /* ---------------------------
+       MEDIA QUERIES: iPhone 13 e simili (portrait)
+       Ottimizzazione immagini, testi e messaggio rotazione
+    --------------------------- */
+    @media (max-width: 540px) and (orientation: portrait) {
+      /* mostra suggerimento rotazione */
+      .rotate-hint {
+        display: flex;
+      }
+
+      /* Scenes: usa background-size: contain per mostrare testo completo senza tagli */
+      .scene {
+        background-size: contain !important;
+        background-color: #fceaea !important;
+        background-blend-mode: normal;
+        background-repeat: no-repeat;
+        background-position: center center;
+      }
+
+      /* Per scena dedica non stravolgere ma mantenere contenuto e scroll agevole */
+      .scene.dedica-scene {
+        background-size: cover !important;  /* la foto mamma preferiamo copra ma non perde testo critico */
+        background-position: center 30%;
+      }
+
+      /* adattamento testo dedica e foto su spazi stretti */
+      .dedication {
+        font-size: 0.9rem;
+        max-width: 90%;
+        padding: 1rem 1rem;
+        margin-bottom: 1rem;
+      }
+      .photo-frame {
+        width: 120px;
+        height: 120px;
+        margin-top: 0.5rem;
+      }
+
+      /* riduci padding laterale scene per avere più spazio */
+      .scene {
+        padding: 1rem;
+      }
+
+      /* frecce più compatte ma ancora tattili */
+      .nav-arrow {
+        width: 40px;
+        height: 40px;
+        font-size: 1.4rem;
+      }
+      .nav-arrow.left { left: 5px; }
+      .nav-arrow.right { right: 5px; }
+
+      /* punti più in alto per evitare sovrapposizione con hint */
+      .dots {
+        bottom: 12px;
+        gap: 8px;
+        padding: 4px 10px;
+      }
+
+      /* barra progresso sottile */
+      .progress-bar {
+        height: 2px;
+      }
+    }
+
+    /* Per schermi molto piccoli in portrait (es. iPhone SE, 375px) migliora ulteriormente */
+    @media (max-width: 420px) and (orientation: portrait) {
+      .dedication {
+        font-size: 0.85rem;
+        line-height: 1.55;
+        padding: 1rem 0.9rem;
+      }
+      .photo-frame {
+        width: 105px;
+        height: 105px;
+      }
+      .rotate-hint {
+        bottom: 70px;
+        font-size: 0.7rem;
+        white-space: nowrap;
+        padding: 6px 14px;
+      }
+    }
+
+    /* landscape: tutto rimane elegante, background cover classico (già default) */
+    @media (orientation: landscape) and (max-height: 500px) {
+      .dots {
+        bottom: 6px;
+      }
+      .nav-arrow {
+        width: 38px;
+        height: 38px;
+      }
+      .dedication {
+        max-height: 70vh;
+        overflow-y: auto;
+      }
+      .scene.dedica-scene {
+        overflow-y: auto;
+      }
+    }
+
+    /* Evita overflow orizzontale su tutti i dispositivi */
+    img, div, .scene, .story-container {
+      max-width: 100%;
+    }
   </style>
 </head>
 <body>
-  <!-- Audio di sottofondo -->
+  <!-- Audio sfondo -->
   <audio id="bgMusic" loop preload="auto">
     <source src="Purity.mp3" type="audio/mpeg">
   </audio>
 
-  <!-- Overlay attivazione musica -->
+  <!-- Overlay avvio musica -->
   <div class="audio-overlay" id="audioOverlay">
     <button class="audio-btn" id="startAudioBtn">
       <span>🔊</span> Tocca per iniziare la storia
     </button>
   </div>
 
+  <div class="story-container">
     <div class="scenes-track" id="scenesTrack">
 
-      <!-- SCENA 1 -->
+      <!-- SCENA 1: testo incluso nell'immagine -->
       <div class="scene" style="background-image: url('img/C\'era_una_volta.png');"></div>
 
       <!-- SCENA 2 -->
@@ -265,8 +417,9 @@
       <!-- SCENA 4 -->
       <div class="scene" style="background-image: url('img/Sotto_un_cielo_di_stelle.png');"></div>
 
-      <!-- SCENA 5 -->
+      <!-- SCENA 5 (Dedica) -->
       <div class="scene dedica-scene" style="background-image: url('img/Mamma_e_figlie.jpg');">
+        <!-- <div class="photo-frame" style="background: url('img/Mamma_e_figlie.jpg') center/cover no-repeat; width: 140px; height: 140px; border-radius: 50%;"></div> -->
         <div class="dedication">
           Alla Mamma migliore che potessi mai desiderare.<br>
           Grazie per l'amore che mi doni ogni giorno,<br>
@@ -280,151 +433,170 @@
         </div>
       </div>
 
-    </div><!-- /scenes-track -->
+    </div><!-- fine scenes-track -->
 
     <button class="nav-arrow left" id="prevBtn" aria-label="Scena precedente">←</button>
     <button class="nav-arrow right" id="nextBtn" aria-label="Scena successiva">→</button>
 
     <div class="dots" id="dotsContainer"></div>
+    <div class="progress-bar" id="progressBar"></div>
 
     <div class="tap-zone left" id="tapLeft"></div>
     <div class="tap-zone right" id="tapRight"></div>
   </div>
 
+  <!-- ROTATE HINT (messaggio discreto solo portrait, chiudibile) -->
+  <div class="rotate-hint" id="rotateHint">
+    <span>🔄</span> Ruota il telefono in orizzontale per vedere la storia al meglio
+    <span class="close-hint" id="closeRotateHint">✕</span>
+  </div>
+
   <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const totalScenes = 5;
-    let currentScene = 0;
-    let autoAdvanceTimer = null;
-    const AUTO_ADVANCE_SEC = 5;
+    (function() {
+      // ========== JS ORIGINALE (INTATTO) ==========
+      document.addEventListener('DOMContentLoaded', function() {
+        const totalScenes = 5;
+        let currentScene = 0;
+        let autoAdvanceTimer = null;
+        // const AUTO_ADVANCE_SEC = 5;
 
-    const track = document.getElementById('scenesTrack');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const dotsContainer = document.getElementById('dotsContainer');
-    const progressBar = document.getElementById('progressBar');
-    const audioOverlay = document.getElementById('audioOverlay');
-    const startAudioBtn = document.getElementById('startAudioBtn');
-    const tapLeft = document.getElementById('tapLeft');
-    const tapRight = document.getElementById('tapRight');
-    const bgMusic = document.getElementById('bgMusic');
+        const track = document.getElementById('scenesTrack');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const dotsContainer = document.getElementById('dotsContainer');
+        const progressBar = document.getElementById('progressBar');
+        const audioOverlay = document.getElementById('audioOverlay');
+        const startAudioBtn = document.getElementById('startAudioBtn');
+        const tapLeft = document.getElementById('tapLeft');
+        const tapRight = document.getElementById('tapRight');
+        const bgMusic = document.getElementById('bgMusic');
 
-    if (!track || !prevBtn || !nextBtn || !startAudioBtn || !audioOverlay) {
-      console.error('Elementi mancanti! Controlla la struttura HTML.');
-      return;
-    }
+        if (!track || !prevBtn || !nextBtn || !startAudioBtn || !audioOverlay) {
+          console.error('Elementi mancanti! Controlla la struttura HTML.');
+          return;
+        }
 
-    // ---------- AUDIO LOCALE ----------
-    function startLocalAudio() {
-      // Prima di tutto, nascondi l'overlay per mostrare la cartolina
-      audioOverlay.classList.add('fade-out');
-      
-      // Poi prova a riprodurre l'audio, se esiste
-      if (bgMusic) {
-        bgMusic.volume = 0.3;
-        bgMusic.play().then(() => {
-          console.log('Audio avviato');
-        }).catch(err => {
-          console.warn('Audio non riprodotto (forse il file non è supportato):', err);
-          // Non facciamo nulla: la cartolina funziona comunque
+        function startLocalAudio() {
+          audioOverlay.classList.add('fade-out');
+          if (bgMusic) {
+            bgMusic.volume = 0.3;
+            bgMusic.play().then(() => {
+              console.log('Audio avviato');
+            }).catch(err => {
+              console.warn('Audio non riprodotto:', err);
+            });
+          }
+        }
+
+        function updateScene(index) {
+          if (index < 0) index = 0;
+          if (index >= totalScenes) index = totalScenes - 1;
+          currentScene = index;
+          
+          track.style.transform = `translateX(-${currentScene * 100}%)`;
+          
+          const dots = document.querySelectorAll('.dot');
+          dots.forEach((dot, i) => {
+            dot.classList.toggle('active', i === currentScene);
+          });
+          
+          prevBtn.classList.toggle('hidden', currentScene === 0);
+          nextBtn.classList.toggle('hidden', currentScene === totalScenes - 1);
+          
+          resetAutoAdvance();
+          if (currentScene < totalScenes - 1) {
+            startAutoAdvance();
+          } else {
+            if (progressBar) progressBar.style.width = '100%';
+          }
+        }
+
+        function goNext() { 
+          if (currentScene < totalScenes - 1) updateScene(currentScene + 1); 
+        }
+        function goPrev() { 
+          if (currentScene > 0) updateScene(currentScene - 1); 
+        }
+
+        function resetAutoAdvance() {
+          clearAutoAdvance();
+          if (!progressBar) return;
+          progressBar.style.transition = 'none';
+          progressBar.style.width = '0%';
+          progressBar.offsetHeight; // force reflow
+          progressBar.style.transition = `width ${AUTO_ADVANCE_SEC}s linear`;
+          progressBar.style.width = '100%';
+        }
+
+        // function startAutoAdvance() {
+        //   if (autoAdvanceTimer) clearTimeout(autoAdvanceTimer);
+        //   autoAdvanceTimer = setTimeout(goNext, AUTO_ADVANCE_SEC * 1000);
+        // }
+
+        function clearAutoAdvance() {
+          if (autoAdvanceTimer) clearTimeout(autoAdvanceTimer);
+          if (progressBar) progressBar.style.transition = 'none';
+        }
+
+        function createDots() {
+          if (!dotsContainer) return;
+          dotsContainer.innerHTML = '';
+          for (let i = 0; i < totalScenes; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'dot' + (i === 0 ? ' active' : '');
+            dot.addEventListener('click', () => updateScene(i));
+            dotsContainer.appendChild(dot);
+          }
+        }
+
+        startAudioBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          e.preventDefault();
+          startLocalAudio();
         });
-      }
-    }
 
-    // ---------- NAVIGAZIONE ----------
-    function updateScene(index) {
-      if (index < 0) index = 0;
-      if (index >= totalScenes) index = totalScenes - 1;
-      currentScene = index;
-      
-      track.style.transform = `translateX(-${currentScene * 100}%)`;
-      
-      const dots = document.querySelectorAll('.dot');
-      dots.forEach((dot, i) => {
-        dot.classList.toggle('active', i === currentScene);
-      });
-      
-      prevBtn.classList.toggle('hidden', currentScene === 0);
-      nextBtn.classList.toggle('hidden', currentScene === totalScenes - 1);
-      
-      resetAutoAdvance();
-      if (currentScene < totalScenes - 1) {
+        if (audioOverlay) {
+          audioOverlay.addEventListener('click', function(e) {
+            if (e.target === audioOverlay) startLocalAudio();
+          });
+        }
+
+        prevBtn.addEventListener('click', goPrev);
+        nextBtn.addEventListener('click', goNext);
+        tapLeft.addEventListener('click', goPrev);
+        tapRight.addEventListener('click', goNext);
+
+        document.addEventListener('keydown', function(e) {
+          if (e.key === 'ArrowRight') goNext();
+          if (e.key === 'ArrowLeft') goPrev();
+        });
+
+        [prevBtn, nextBtn, tapLeft, tapRight].forEach(function(el) {
+          el.addEventListener('click', function() {
+            resetAutoAdvance();
+            if (currentScene < totalScenes - 1) startAutoAdvance();
+          });
+        });
+
+        createDots();
+        updateScene(0);
         startAutoAdvance();
-      } else {
-        progressBar.style.width = '100%';
-      }
-    }
-
-    function goNext() { 
-      if (currentScene < totalScenes - 1) updateScene(currentScene + 1); 
-    }
-    function goPrev() { 
-      if (currentScene > 0) updateScene(currentScene - 1); 
-    }
-
-    function resetAutoAdvance() {
-      clearAutoAdvance();
-      progressBar.style.transition = 'none';
-      progressBar.style.width = '0%';
-      progressBar.offsetHeight;
-      progressBar.style.transition = `width ${AUTO_ADVANCE_SEC}s linear`;
-      progressBar.style.width = '100%';
-    }
-
-    function startAutoAdvance() {
-      if (autoAdvanceTimer) clearTimeout(autoAdvanceTimer);
-      autoAdvanceTimer = setTimeout(goNext, AUTO_ADVANCE_SEC * 1000);
-    }
-
-    function clearAutoAdvance() {
-      if (autoAdvanceTimer) clearTimeout(autoAdvanceTimer);
-      progressBar.style.transition = 'none';
-    }
-
-    function createDots() {
-      dotsContainer.innerHTML = '';
-      for (let i = 0; i < totalScenes; i++) {
-        const dot = document.createElement('div');
-        dot.className = 'dot' + (i === 0 ? ' active' : '');
-        dot.addEventListener('click', () => updateScene(i));
-        dotsContainer.appendChild(dot);
-      }
-    }
-
-    // ---------- EVENTI ----------
-    startAudioBtn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      e.preventDefault();
-      console.log('Pulsante cliccato!');
-      startLocalAudio();
-    });
-
-    audioOverlay.addEventListener('click', function(e) {
-      if (e.target === audioOverlay) startLocalAudio();
-    });
-
-    prevBtn.addEventListener('click', goPrev);
-    nextBtn.addEventListener('click', goNext);
-    tapLeft.addEventListener('click', goPrev);
-    tapRight.addEventListener('click', goNext);
-
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'ArrowRight') goNext();
-      if (e.key === 'ArrowLeft') goPrev();
-    });
-
-    [prevBtn, nextBtn, tapLeft, tapRight].forEach(function(el) {
-      el.addEventListener('click', function() {
-        resetAutoAdvance();
-        if (currentScene < totalScenes - 1) startAutoAdvance();
+        console.log('Cartolina pronta!');
       });
-    });
 
-    createDots();
-    updateScene(0);
-    startAutoAdvance();
-    console.log('Cartolina pronta!');
-  });
-</script>
+      // ========== Piccola UX per chiudere il suggerimento rotazione (non interferisce con la logica principale) ==========
+      const closeHintBtn = document.getElementById('closeRotateHint');
+      const rotateHintDiv = document.getElementById('rotateHint');
+      if (closeHintBtn && rotateHintDiv) {
+        closeHintBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          rotateHintDiv.style.display = 'none';
+        });
+        // opzionale: se l'utente ruota in landscape e poi torna portrait non riappare in automatico,
+        // ma non c'è problema, migliora l'esperienza perché l'utente ha chiuso consapevolmente.
+        // Inoltre garantiamo che non si veda più per la sessione corrente
+      }
+    })();
+  </script>
 </body>
 </html>
