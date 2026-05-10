@@ -282,16 +282,14 @@
     }
 
     /* ---------------------------
-       MEDIA QUERIES: iPhone 13 e simili (portrait)
-       Ottimizzazione immagini, testi e messaggio rotazione
+       MEDIA QUERIES: solo per orientamento verticale (già ottimizzato)
+       nessuna modifica richiesta, manteniamo le regole esistenti 
+       ma miglioriamo ulteriormente la visualizzazione in ORIZZONTALE
     --------------------------- */
     @media (max-width: 540px) and (orientation: portrait) {
-      /* mostra suggerimento rotazione */
       .rotate-hint {
         display: flex;
       }
-
-      /* Scenes: usa background-size: contain per mostrare testo completo senza tagli */
       .scene {
         background-size: contain !important;
         background-color: #fceaea !important;
@@ -299,14 +297,10 @@
         background-repeat: no-repeat;
         background-position: center center;
       }
-
-      /* Per scena dedica non stravolgere ma mantenere contenuto e scroll agevole */
       .scene.dedica-scene {
-        background-size: cover !important;  /* la foto mamma preferiamo copra ma non perde testo critico */
+        background-size: cover !important;
         background-position: center 30%;
       }
-
-      /* adattamento testo dedica e foto su spazi stretti */
       .dedication {
         font-size: 0.9rem;
         max-width: 90%;
@@ -318,13 +312,9 @@
         height: 120px;
         margin-top: 0.5rem;
       }
-
-      /* riduci padding laterale scene per avere più spazio */
       .scene {
         padding: 1rem;
       }
-
-      /* frecce più compatte ma ancora tattili */
       .nav-arrow {
         width: 40px;
         height: 40px;
@@ -332,21 +322,16 @@
       }
       .nav-arrow.left { left: 5px; }
       .nav-arrow.right { right: 5px; }
-
-      /* punti più in alto per evitare sovrapposizione con hint */
       .dots {
         bottom: 12px;
         gap: 8px;
         padding: 4px 10px;
       }
-
-      /* barra progresso sottile */
       .progress-bar {
         height: 2px;
       }
     }
 
-    /* Per schermi molto piccoli in portrait (es. iPhone SE, 375px) migliora ulteriormente */
     @media (max-width: 420px) and (orientation: portrait) {
       .dedication {
         font-size: 0.85rem;
@@ -365,25 +350,100 @@
       }
     }
 
-    /* landscape: tutto rimane elegante, background cover classico (già default) */
-    @media (orientation: landscape) and (max-height: 500px) {
-      .dots {
-        bottom: 6px;
+    /* ==============================================
+       ORIZZONTALE: risoluzione definitiva dei tagli di testo
+       e adattamento all'altezza con scroll dedicato
+    ============================================== */
+    @media (orientation: landscape) {
+      /* Forza l'utilizzo di tutta l'altezza dinamica, evita barre esterne */
+      .story-container {
+        height: 100dvh;
+        overflow: hidden;
       }
-      .nav-arrow {
-        width: 38px;
-        height: 38px;
+      /* Ogni scena in orizzontale: massima altezza e contenuto centrato */
+      .scene {
+        justify-content: center;
+        padding: 1rem 2rem;
       }
-      .dedication {
-        max-height: 70vh;
-        overflow-y: auto;
-      }
+      /* La scena dedica diventa scrollabile verticalmente per non tagliare mai il testo */
       .scene.dedica-scene {
         overflow-y: auto;
+        justify-content: flex-start;
+        padding-top: 1.5rem;
+        padding-bottom: 1.5rem;
+      }
+      /* Testo dedica più compatto ma leggibile e senza overflow */
+      .dedication {
+        font-size: 1rem;
+        max-width: 32ch;
+        margin: 0.5rem auto 1.5rem auto;
+        padding: 1.2rem 1.2rem;
+        line-height: 1.6;
+        max-height: none;
+        overflow-y: visible;
+      }
+      .photo-frame {
+        width: 130px;
+        height: 130px;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+        flex-shrink: 0;
+      }
+      /* Assicura che le frecce non coprano il testo importante */
+      .nav-arrow {
+        width: 44px;
+        height: 44px;
+        background: rgba(255,255,255,0.9);
+        backdrop-filter: blur(10px);
+        z-index: 35;
+      }
+      .nav-arrow.left { left: 12px; }
+      .nav-arrow.right { right: 12px; }
+      /* Punti di navigazione ben distanziati dall'indicatore di scorrimento home */
+      .dots {
+        bottom: max(12px, env(safe-area-inset-bottom, 12px));
+        background: rgba(240, 230, 235, 0.7);
+        padding: 5px 14px;
+      }
+      /* Per schermi molto piatti (altezza <= 450px) riduci ulteriormente padding */
+      @media (max-height: 450px) {
+        .scene {
+          padding: 0.8rem 1.2rem;
+        }
+        .dedication {
+          font-size: 0.85rem;
+          padding: 0.8rem 1rem;
+          margin: 0.2rem 0.5rem;
+        }
+        .photo-frame {
+          width: 100px;
+          height: 100px;
+        }
+        .nav-arrow {
+          width: 36px;
+          height: 36px;
+          font-size: 1.3rem;
+        }
+      }
+      /* Per iPhone 13 landscape (844x390) e simili, adattamento specifico aggiuntivo */
+      @media (max-height: 420px) {
+        .dedication {
+          max-width: 85%;
+          font-size: 0.8rem;
+          line-height: 1.5;
+        }
+        .photo-frame {
+          width: 90px;
+          height: 90px;
+        }
+        .scene.dedica-scene {
+          padding-top: 0.5rem;
+          padding-bottom: 0.5rem;
+        }
       }
     }
 
-    /* Evita overflow orizzontale su tutti i dispositivi */
+    /* Garantisce che in qualsiasi orientamento non ci sia overflow orizzontale */
     img, div, .scene, .story-container {
       max-width: 100%;
     }
@@ -418,7 +478,7 @@
       <div class="scene" style="background-image: url('img/Sotto_un_cielo_di_stelle.png');"></div>
 
       <!-- SCENA 5 (Dedica) -->
-      <div class="scene dedica-scene" style="background-color: #ffb6c1;">
+      <div class="scene dedica-scene" style="background-image: url('img/Mamma_e_figlie.jpg');">
         <div class="photo-frame" style="background: url('img/Mamma_e_figlie.jpg') center/cover no-repeat; width: 140px; height: 140px; border-radius: 50%;"></div>
         <div class="dedication">
           Alla Mamma migliore che potessi mai desiderare.<br>
@@ -446,10 +506,10 @@
   </div>
 
   <!-- ROTATE HINT (messaggio discreto solo portrait, chiudibile) -->
-  <!-- <div class="rotate-hint" id="rotateHint">
+  <div class="rotate-hint" id="rotateHint">
     <span>🔄</span> Ruota il telefono in orizzontale per vedere la storia al meglio
     <span class="close-hint" id="closeRotateHint">✕</span>
-  </div> -->
+  </div>
 
   <script>
     (function() {
@@ -458,7 +518,7 @@
         const totalScenes = 5;
         let currentScene = 0;
         let autoAdvanceTimer = null;
-        // const AUTO_ADVANCE_SEC = 5;
+        const AUTO_ADVANCE_SEC = 5;
 
         const track = document.getElementById('scenesTrack');
         const prevBtn = document.getElementById('prevBtn');
@@ -528,10 +588,10 @@
           progressBar.style.width = '100%';
         }
 
-        // function startAutoAdvance() {
-        //   if (autoAdvanceTimer) clearTimeout(autoAdvanceTimer);
-        //   autoAdvanceTimer = setTimeout(goNext, AUTO_ADVANCE_SEC * 1000);
-        // }
+        function startAutoAdvance() {
+          if (autoAdvanceTimer) clearTimeout(autoAdvanceTimer);
+          autoAdvanceTimer = setTimeout(goNext, AUTO_ADVANCE_SEC * 1000);
+        }
 
         function clearAutoAdvance() {
           if (autoAdvanceTimer) clearTimeout(autoAdvanceTimer);
@@ -584,7 +644,7 @@
         console.log('Cartolina pronta!');
       });
 
-      // ========== Piccola UX per chiudere il suggerimento rotazione (non interferisce con la logica principale) ==========
+      // Gestione chiusura hint di rotazione (solo UX, non altera logica principale)
       const closeHintBtn = document.getElementById('closeRotateHint');
       const rotateHintDiv = document.getElementById('rotateHint');
       if (closeHintBtn && rotateHintDiv) {
@@ -592,9 +652,6 @@
           e.stopPropagation();
           rotateHintDiv.style.display = 'none';
         });
-        // opzionale: se l'utente ruota in landscape e poi torna portrait non riappare in automatico,
-        // ma non c'è problema, migliora l'esperienza perché l'utente ha chiuso consapevolmente.
-        // Inoltre garantiamo che non si veda più per la sessione corrente
       }
     })();
   </script>
