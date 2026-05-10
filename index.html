@@ -641,50 +641,39 @@
         console.log('Cartolina pronta!');
       });
 
-      // ========== PULSANTE FULLSCREEN (SCHERMO INTERO) FUNZIONANTE ==========
+      // ========== PULSANTE FULLSCREEN (SCHERMO INTERO) ==========
       const fullscreenBtn = document.getElementById('fullscreenBtn');
-      
+      const container = document.documentElement; // l'intera pagina
+
       function toggleFullscreen() {
-        const docEl = document.documentElement;
-        const isFullscreen = !!(document.fullscreenElement || document.webkitFullscreenElement);
-        
-        if (!isFullscreen) {
-          // Entra in modalità schermo intero
-          const requestFullscreen = docEl.requestFullscreen || docEl.webkitRequestFullscreen;
-          if (requestFullscreen) {
-            requestFullscreen.call(docEl).catch(err => {
-              console.warn('Fullscreen non disponibile:', err);
-              // Tentativo alternativo su iOS: usare il container
-              const container = document.getElementById('storyContainer');
-              if (container && container.webkitRequestFullscreen) {
-                container.webkitRequestFullscreen();
-              }
+        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+          // Entra in fullscreen
+          const elem = document.documentElement;
+          const requestMethod = elem.requestFullscreen || elem.webkitRequestFullscreen;
+          if (requestMethod) {
+            requestMethod.call(elem).catch(err => {
+              console.warn(`Errore fullscreen: ${err.message}`);
             });
-          } else {
-            // Fallback: avviso console (nessun fullscreen)
-            console.warn('Fullscreen API non supportata');
           }
         } else {
-          // Esce dallo schermo intero
-          const exitFullscreen = document.exitFullscreen || document.webkitExitFullscreen;
-          if (exitFullscreen) {
-            exitFullscreen.call(document);
+          // Esci dal fullscreen
+          const exitMethod = document.exitFullscreen || document.webkitExitFullscreen;
+          if (exitMethod) {
+            exitMethod.call(document);
           }
         }
       }
-      
+
       if (fullscreenBtn) {
         fullscreenBtn.addEventListener('click', toggleFullscreen);
-        
-        // Aggiorna l'icona quando lo stato fullscreen cambia
-        function updateIcon() {
+        // Opzionale: cambia icona in base allo stato (opzionale ma carino)
+        document.addEventListener('fullscreenchange', updateFullscreenIcon);
+        document.addEventListener('webkitfullscreenchange', updateFullscreenIcon);
+        function updateFullscreenIcon() {
           const isFull = !!(document.fullscreenElement || document.webkitFullscreenElement);
           fullscreenBtn.textContent = isFull ? '✕' : '⛶';
           fullscreenBtn.setAttribute('aria-label', isFull ? 'Esci da schermo intero' : 'Schermo intero');
         }
-        document.addEventListener('fullscreenchange', updateIcon);
-        document.addEventListener('webkitfullscreenchange', updateIcon);
-        updateIcon();
       }
 
       // Gestione chiusura hint di rotazione (UX)
