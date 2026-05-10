@@ -478,7 +478,7 @@
       <div class="scene" style="background-image: url('img/Sotto_un_cielo_di_stelle.png');"></div>
 
       <!-- SCENA 5 (Dedica) -->
-      <div class="scene dedica-scene" style="background-image: url('img/Mamma_e_figlie.jpg');">
+      <div class="scene dedica-scene" style="background-color: #ffa5b9;">
         <div class="photo-frame" style="background: url('img/Mamma_e_figlie.jpg') center/cover no-repeat; width: 140px; height: 140px; border-radius: 50%;"></div>
         <div class="dedication">
           Alla Mamma migliore che potessi mai desiderare.<br>
@@ -518,7 +518,7 @@
         const totalScenes = 5;
         let currentScene = 0;
         let autoAdvanceTimer = null;
-        const AUTO_ADVANCE_SEC = 5;
+        // const AUTO_ADVANCE_SEC = 5;
 
         const track = document.getElementById('scenesTrack');
         const prevBtn = document.getElementById('prevBtn');
@@ -588,10 +588,10 @@
           progressBar.style.width = '100%';
         }
 
-        function startAutoAdvance() {
-          if (autoAdvanceTimer) clearTimeout(autoAdvanceTimer);
-          autoAdvanceTimer = setTimeout(goNext, AUTO_ADVANCE_SEC * 1000);
-        }
+        // function startAutoAdvance() {
+        //   if (autoAdvanceTimer) clearTimeout(autoAdvanceTimer);
+        // //   autoAdvanceTimer = setTimeout(goNext, AUTO_ADVANCE_SEC * 1000);
+        // }
 
         function clearAutoAdvance() {
           if (autoAdvanceTimer) clearTimeout(autoAdvanceTimer);
