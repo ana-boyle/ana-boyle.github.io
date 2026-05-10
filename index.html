@@ -229,48 +229,6 @@
       transform: scale(0.96);
     }
 
-    /* --- PULSANTE FULLSCREEN (schermo intero) --- */
-    .fullscreen-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: rgba(0,0,0,0.65);
-      backdrop-filter: blur(10px);
-      border: none;
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      color: white;
-      font-size: 1.7rem;
-      cursor: pointer;
-      z-index: 200;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-      transition: all 0.2s ease;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .fullscreen-btn:active {
-      transform: scale(0.92);
-      background: rgba(0,0,0,0.8);
-    }
-    /* Per non coprire i punti di navigazione */
-    @media (max-width: 600px) {
-      .fullscreen-btn {
-        bottom: 70px;
-        width: 44px;
-        height: 44px;
-        font-size: 1.5rem;
-      }
-    }
-    @media (orientation: landscape) {
-      .fullscreen-btn {
-        bottom: 15px;
-        right: 15px;
-      }
-    }
-
     /* --- ROTATE HINT (messaggio discreto per orientamento portrait) --- */
     .rotate-hint {
       position: fixed;
@@ -318,17 +276,22 @@
       background: rgba(255,255,255,0.5);
     }
 
+    /* di default messaggio nascosto */
     .rotate-hint {
       display: none;
     }
 
     /* ---------------------------
-       MEDIA QUERIES: portrait (invariato, nessuna modifica richiesta dall'utente)
+       MEDIA QUERIES: iPhone 13 e simili (portrait)
+       Ottimizzazione immagini, testi e messaggio rotazione
     --------------------------- */
     @media (max-width: 540px) and (orientation: portrait) {
+      /* mostra suggerimento rotazione */
       .rotate-hint {
         display: flex;
       }
+
+      /* Scenes: usa background-size: contain per mostrare testo completo senza tagli */
       .scene {
         background-size: contain !important;
         background-color: #fceaea !important;
@@ -336,10 +299,14 @@
         background-repeat: no-repeat;
         background-position: center center;
       }
+
+      /* Per scena dedica non stravolgere ma mantenere contenuto e scroll agevole */
       .scene.dedica-scene {
-        background-size: cover !important;
+        background-size: cover !important;  /* la foto mamma preferiamo copra ma non perde testo critico */
         background-position: center 30%;
       }
+
+      /* adattamento testo dedica e foto su spazi stretti */
       .dedication {
         font-size: 0.9rem;
         max-width: 90%;
@@ -351,9 +318,13 @@
         height: 120px;
         margin-top: 0.5rem;
       }
+
+      /* riduci padding laterale scene per avere più spazio */
       .scene {
         padding: 1rem;
       }
+
+      /* frecce più compatte ma ancora tattili */
       .nav-arrow {
         width: 40px;
         height: 40px;
@@ -361,16 +332,21 @@
       }
       .nav-arrow.left { left: 5px; }
       .nav-arrow.right { right: 5px; }
+
+      /* punti più in alto per evitare sovrapposizione con hint */
       .dots {
         bottom: 12px;
         gap: 8px;
         padding: 4px 10px;
       }
+
+      /* barra progresso sottile */
       .progress-bar {
         height: 2px;
       }
     }
 
+    /* Per schermi molto piccoli in portrait (es. iPhone SE, 375px) migliora ulteriormente */
     @media (max-width: 420px) and (orientation: portrait) {
       .dedication {
         font-size: 0.85rem;
@@ -389,57 +365,27 @@
       }
     }
 
-    /* ORIZZONTALE: risoluzione tagli di testo e schermo intero pienamente supportato */
-    @media (orientation: landscape) {
-      .story-container {
-        height: 100dvh;
-        overflow: hidden;
+    /* landscape: tutto rimane elegante, background cover classico (già default) */
+    @media (orientation: landscape) and (max-height: 500px) {
+      .dots {
+        bottom: 6px;
       }
-      .scene {
-        justify-content: center;
-        padding: 1rem 2rem;
+      .nav-arrow {
+        width: 38px;
+        height: 38px;
+      }
+      .dedication {
+        max-height: 70vh;
+        overflow-y: auto;
       }
       .scene.dedica-scene {
         overflow-y: auto;
-        justify-content: flex-start;
-        padding-top: 1.5rem;
-        padding-bottom: 1.5rem;
       }
-      .dedication {
-        font-size: 1rem;
-        max-width: 32ch;
-        margin: 0.5rem auto 1.5rem auto;
-        padding: 1.2rem 1.2rem;
-        line-height: 1.6;
-        max-height: none;
-        overflow-y: visible;
-      }
-      .photo-frame {
-        width: 130px;
-        height: 130px;
-        margin-top: 0.5rem;
-        margin-bottom: 0.5rem;
-      }
-      .nav-arrow {
-        width: 44px;
-        height: 44px;
-      }
-      .dots {
-        bottom: max(12px, env(safe-area-inset-bottom, 12px));
-      }
-      @media (max-height: 450px) {
-        .scene {
-          padding: 0.8rem 1.2rem;
-        }
-        .dedication {
-          font-size: 0.85rem;
-          padding: 0.8rem 1rem;
-        }
-        .photo-frame {
-          width: 100px;
-          height: 100px;
-        }
-      }
+    }
+
+    /* Evita overflow orizzontale su tutti i dispositivi */
+    img, div, .scene, .story-container {
+      max-width: 100%;
     }
   </style>
 </head>
@@ -456,10 +402,10 @@
     </button>
   </div>
 
-  <div class="story-container" id="storyContainer">
+  <div class="story-container">
     <div class="scenes-track" id="scenesTrack">
 
-      <!-- SCENA 1 -->
+      <!-- SCENA 1: testo incluso nell'immagine -->
       <div class="scene" style="background-image: url('img/C\'era_una_volta.png');"></div>
 
       <!-- SCENA 2 -->
@@ -472,7 +418,7 @@
       <div class="scene" style="background-image: url('img/Sotto_un_cielo_di_stelle.png');"></div>
 
       <!-- SCENA 5 (Dedica) -->
-      <div class="scene dedica-scene" style="background-image: url('img/Mamma_e_figlie.jpg');">
+      <div class="scene dedica-scene" style="background-color: #ffb6c1;">
         <div class="photo-frame" style="background: url('img/Mamma_e_figlie.jpg') center/cover no-repeat; width: 140px; height: 140px; border-radius: 50%;"></div>
         <div class="dedication">
           Alla Mamma migliore che potessi mai desiderare.<br>
@@ -499,23 +445,20 @@
     <div class="tap-zone right" id="tapRight"></div>
   </div>
 
-  <!-- Pulsante schermo intero -->
-  <button class="fullscreen-btn" id="fullscreenBtn" aria-label="Schermo intero">⛶</button>
-
-  <!-- ROTATE HINT (solo portrait) -->
-  <div class="rotate-hint" id="rotateHint">
+  <!-- ROTATE HINT (messaggio discreto solo portrait, chiudibile) -->
+  <!-- <div class="rotate-hint" id="rotateHint">
     <span>🔄</span> Ruota il telefono in orizzontale per vedere la storia al meglio
     <span class="close-hint" id="closeRotateHint">✕</span>
-  </div>
+  </div> -->
 
   <script>
     (function() {
-      // ========== LOGICA ORIGINALE (INTATTA) ==========
+      // ========== JS ORIGINALE (INTATTO) ==========
       document.addEventListener('DOMContentLoaded', function() {
         const totalScenes = 5;
         let currentScene = 0;
         let autoAdvanceTimer = null;
-        const AUTO_ADVANCE_SEC = 5;
+        // const AUTO_ADVANCE_SEC = 5;
 
         const track = document.getElementById('scenesTrack');
         const prevBtn = document.getElementById('prevBtn');
@@ -585,10 +528,10 @@
           progressBar.style.width = '100%';
         }
 
-        function startAutoAdvance() {
-          if (autoAdvanceTimer) clearTimeout(autoAdvanceTimer);
-          autoAdvanceTimer = setTimeout(goNext, AUTO_ADVANCE_SEC * 1000);
-        }
+        // function startAutoAdvance() {
+        //   if (autoAdvanceTimer) clearTimeout(autoAdvanceTimer);
+        //   autoAdvanceTimer = setTimeout(goNext, AUTO_ADVANCE_SEC * 1000);
+        // }
 
         function clearAutoAdvance() {
           if (autoAdvanceTimer) clearTimeout(autoAdvanceTimer);
@@ -641,42 +584,7 @@
         console.log('Cartolina pronta!');
       });
 
-      // ========== PULSANTE FULLSCREEN (SCHERMO INTERO) ==========
-      const fullscreenBtn = document.getElementById('fullscreenBtn');
-      const container = document.documentElement; // l'intera pagina
-
-      function toggleFullscreen() {
-        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-          // Entra in fullscreen
-          const elem = document.documentElement;
-          const requestMethod = elem.requestFullscreen || elem.webkitRequestFullscreen;
-          if (requestMethod) {
-            requestMethod.call(elem).catch(err => {
-              console.warn(`Errore fullscreen: ${err.message}`);
-            });
-          }
-        } else {
-          // Esci dal fullscreen
-          const exitMethod = document.exitFullscreen || document.webkitExitFullscreen;
-          if (exitMethod) {
-            exitMethod.call(document);
-          }
-        }
-      }
-
-      if (fullscreenBtn) {
-        fullscreenBtn.addEventListener('click', toggleFullscreen);
-        // Opzionale: cambia icona in base allo stato (opzionale ma carino)
-        document.addEventListener('fullscreenchange', updateFullscreenIcon);
-        document.addEventListener('webkitfullscreenchange', updateFullscreenIcon);
-        function updateFullscreenIcon() {
-          const isFull = !!(document.fullscreenElement || document.webkitFullscreenElement);
-          fullscreenBtn.textContent = isFull ? '✕' : '⛶';
-          fullscreenBtn.setAttribute('aria-label', isFull ? 'Esci da schermo intero' : 'Schermo intero');
-        }
-      }
-
-      // Gestione chiusura hint di rotazione (UX)
+      // ========== Piccola UX per chiudere il suggerimento rotazione (non interferisce con la logica principale) ==========
       const closeHintBtn = document.getElementById('closeRotateHint');
       const rotateHintDiv = document.getElementById('rotateHint');
       if (closeHintBtn && rotateHintDiv) {
@@ -684,6 +592,9 @@
           e.stopPropagation();
           rotateHintDiv.style.display = 'none';
         });
+        // opzionale: se l'utente ruota in landscape e poi torna portrait non riappare in automatico,
+        // ma non c'è problema, migliora l'esperienza perché l'utente ha chiuso consapevolmente.
+        // Inoltre garantiamo che non si veda più per la sessione corrente
       }
     })();
   </script>
